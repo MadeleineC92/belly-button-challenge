@@ -18,60 +18,53 @@ d3.json("samples.json").then(response => {
 }
 
 function hbar(sample_id) {
-    d3.json("samples.json").then((data) => {
-        let samples = data.samples.find(item => item.id == sample_id);
-        console.log(data);
-        
-        var data1 = [{
-            type: 'bar',
-            x: samples.sample_values.slice(0, 10),
-            y: samples.otu_ids.slice(0, 10).map(id => `OTU ${id}`),
-            orientation: 'h'
-        }];
-        console.log(data1);
-        
-        let hbarEL = d3.select("#bar");
-        hbarEL.html("");
-        
-        Object.entries(samples).forEach(([key, value]) => {
-            hbarEL.append("div").text(`${key}: ${value}`);
-        });
-        
-        Plotly.newPlot('bar', data1);
-    });
-}
-
-function bubble(sample_id) {
-    d3.json("samples.json").then((data) => {
+    // d3.json("samples.json").then((data) => {
         let samples = data.samples.find(item => item.id == sample_id);
         console.log(samples);
         
-        var datab = {
-            x: samples.sample_values.slice(0, 10),
-            y: samples.otu_ids.slice(0, 10).map(id => `OTU ${id}`),
-            mode: 'markers',
-            marker: {
-                size: [40, 60, 80, 100]
-            }
-        };
+        let data1 = [{
+            type: 'bar',
+            x: samples.sample_values.slice(0, 10).reverse(),
+            y: samples.otu_ids.slice(0, 10).map(id => `OTU ${id}`).reverse(),
+            orientation: 'h',
+            text:samples.otu_labels.slice(0, 10).reverse(),
+        }];
+        // console.log(data1);
         
-        var data1 = [datab];
-        
-        var layout = {
-            title: 'Marker Size',
-            showlegend: false,
-            height: 600,
-            width: 600
-        };
-        
-        Plotly.newPlot('bubble', datab, layout);
-    });
+                
+        Plotly.newPlot('bar', data1);
+    // });
 }
 
 
 
-
-
+function bubble(sample_id) {
+    // d3.json("samples.json").then((data) => {
+        let samples = data.samples.find(item => item.id == sample_id);
+        console.log(samples);
+        
+        let datab = [{
+            x:samples.otu_ids, 
+            y: samples.sample_values,
+            mode: 'markers',
+            text:samples.otu_labels,
+            marker: {
+                size:samples.sample_values,
+                color:samples.otu_ids                
+            }
+        }];
+        
+                
+        let layout = {
+            title: 'Marker Size',
+            showlegend: false,
+            // height: 600,
+            // width: 600
+        };
+        
+        Plotly.newPlot('bubble', datab, layout);
+    // });
+}
 
 
 
